@@ -1,0 +1,49 @@
+- name: Install and configure munge 
+  apt: 
+    name: munge
+    update_cache: yes
+
+- name: Install slurm-llnl with its dependencies
+  apt:
+    name: slurm-llnl
+    update_cache: yes
+
+- name: Push configuration file for slurmd and slurmctld in /etc/slurm-llnl/
+  template:
+    src: slurm.conf
+    dest : /etc/slurm-llnl/slurm.conf
+  
+- name: Configure slurmd.pid
+  file: 
+    path: /var/run/slurm-llnl/slurmd.pid
+    state: touch
+    owner: slurm
+    mode: 0600 
+
+- name: Configure /var/spool/slurmctld
+  file:
+    path: /var/spool/slurmctld
+    state: directory
+    owner: slurm
+    mode: 0755
+
+- name: Configure /var/spool/slurmd
+  file:
+    path: /var/spool/slurmd
+    state: directory
+    owner: slurm
+    mode: 0755 
+
+- name: Enable slurmctld
+  command: systemctl enable slurmctld
+
+- name: Enable slurmd
+  command: systemctl enable slurmd 
+
+- name: start slurmctld
+  command: /etc/init.d/slurmctld start
+
+- name: start slurmd
+  command: /etc/init.d/slurmd start
+
+  

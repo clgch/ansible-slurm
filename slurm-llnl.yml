@@ -1,0 +1,7 @@
+- name: Install and configure slurm-llnl
+  hosts: compute-queue-test2
+  remote_user: debian
+  become: yes
+ 
+  roles:
+     - slurm-llnl
